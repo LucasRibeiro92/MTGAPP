@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.scout.mtgapp" />
+                  <option name="mobileSdkAppId" value="1:831920198775:android:750ddf89e7ac62b3516272" />
+                  <option name="projectId" value="aimtg-e4cf6" />
+                  <option name="projectNumber" value="831920198775" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.gms.google-services")
     kotlin("kapt")
+    id("kotlin-parcelize") // Substitua "kotlin-android-extensions" por "kotlin-parcelize"
 }
 
 android {
@@ -11,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.scout.mtgapp"
-        minSdk = 24
+        minSdk = 28
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -49,6 +50,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.converter.gson)
     implementation(libs.retrofit)
+    implementation(libs.car.ui.lib)
+    implementation(libs.androidx.swiperefreshlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -99,6 +102,13 @@ dependencies {
     implementation("androidx.room:room-ktx:2.5.0")
     kapt("androidx.room:room-compiler:2.5.0")
     implementation("androidx.room:room-testing:2.5.1")
+
+    /*
+    *
+    *  GRAPHICS
+    *
+     */
+    implementation("com.squareup.picasso:picasso:2.71828")
 
     /*
     *
