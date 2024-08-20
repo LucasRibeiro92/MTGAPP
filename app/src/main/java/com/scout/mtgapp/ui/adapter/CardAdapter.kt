@@ -1,22 +1,17 @@
 package com.scout.mtgapp.ui.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.scout.mtgapp.R
-import com.scout.mtgapp.data.entity.card.Card
+import com.scout.mtgapp.data.remote.entity.CardResponse
 import com.scout.mtgapp.databinding.ItemCardBinding
 import com.squareup.picasso.Picasso
 
 class CardAdapter(
-    private val onCardClick: (Card) -> Unit
-) :
-    ListAdapter<Card, CardAdapter.CardViewHolder>(CardDiffCallback()) {
+    private var cards: List<CardResponse>,  // Lista inicial de cartas
+    private val onCardClick: (CardResponse) -> Unit  // Função de callback para cliques
+) : RecyclerView.Adapter<CardAdapter.CardViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val binding = ItemCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -24,36 +19,33 @@ class CardAdapter(
     }
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
-        val card = getItem(position)
+        val card = cards[position]
         holder.bind(card)
     }
 
-    inner class CardViewHolder(private val binding: ItemCardBinding) : RecyclerView.ViewHolder(binding.root) {
+    override fun getItemCount(): Int = cards.size
 
-        fun bind(card: Card) {
+
+    // Função para atualizar a lista de cartas
+    fun updateCards(newCards: List<CardResponse>) {
+        cards = newCards
+        notifyDataSetChanged()  // Atualiza o adapter e o RecyclerView
+    }
+
+    inner class CardViewHolder(private val binding: ItemCardBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(card: CardResponse) {
             binding.cardName.text = card.name
             binding.cardType.text = card.typeLine
 
-            /*Picasso.get()
-                .load(card.imageUrl)
-                .placeholder(R.drawable.placeholder_card_image)
+            Picasso.get()
+                .load(card.imageUris?.normal)
+                .placeholder(R.drawable.img_placeholder)
                 .into(binding.cardImage)
-
-             */
 
             itemView.setOnClickListener {
                 onCardClick(card)
             }
-        }
-    }
-
-    class CardDiffCallback : DiffUtil.ItemCallback<Card>() {
-        override fun areItemsTheSame(oldItem: Card, newItem: Card): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Card, newItem: Card): Boolean {
-            return oldItem == newItem
         }
     }
 }

@@ -8,7 +8,8 @@
     android:clickable="true"
     android:focusable="true"
     android:strokeColor="@color/colorPrimary"
-    android:elevation="4dp">
+    android:elevation="4dp"
+    android:backgroundTint="@color/vermeioClaro">
 
     <LinearLayout
         android:layout_width="match_parent"

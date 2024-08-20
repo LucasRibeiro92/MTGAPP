@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="vermeioEscuro">#660b15</color>
+    <color name="vermeioClaro">#ab1323</color>
+    <color name="brancoGelo">#e1e1e1</color>
+    <color name="cinzaEscuro">#1c1c1c</color>
 </resources>

@@ -5,18 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import com.scout.mtgapp.R
-import com.scout.mtgapp.data.entity.card.Card
+import com.scout.mtgapp.data.remote.entity.CardResponse
 import com.scout.mtgapp.databinding.FragmentCardDetailBinding
 import com.scout.mtgapp.ui.viewmodel.CardViewModel
+import com.squareup.picasso.Picasso
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class CardDetailFragment : Fragment() {
 
     private var _binding: FragmentCardDetailBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: CardViewModel
+    private val viewModel by activityViewModel<CardViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,14 +29,14 @@ class CardDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(this).get(CardViewModel::class.java)
-
-        val card = arguments?.getParcelable<Card>("card")
+        val card = arguments?.getParcelable<CardResponse>("card")
         card?.let {
             binding.cardName.text = it.name
             binding.cardType.text = it.typeLine
-            //binding.cardImage.setImageURI(it.imageUris.normal)
+            Picasso.get()
+                .load(card.imageUris?.normal)
+                .placeholder(R.drawable.img_placeholder)
+                .into(binding.cardImage)
         }
     }
 

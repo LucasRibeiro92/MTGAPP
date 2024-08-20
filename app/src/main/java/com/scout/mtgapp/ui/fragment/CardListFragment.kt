@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.scout.mtgapp.R
 import com.scout.mtgapp.databinding.FragmentCardListBinding
 import com.scout.mtgapp.ui.activity.HomeActivity
 import com.scout.mtgapp.ui.adapter.CardAdapter
@@ -26,7 +24,7 @@ class CardListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentCardListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -34,8 +32,12 @@ class CardListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = CardAdapter { card -> (activity as HomeActivity).showCardDetails(card) }
-        binding.recyclerView.adapter = adapter
+        val adapter = CardAdapter(
+            emptyList()
+        ) { card ->
+            (activity as HomeActivity).showCardDetails(card)
+        }
+        binding.rvCards.adapter = adapter
 
         val query = arguments?.getString("query")
         if (query.isNullOrEmpty()) {
@@ -45,8 +47,10 @@ class CardListFragment : Fragment() {
         }
 
         viewModel.cards.observe(viewLifecycleOwner, Observer { cards ->
+            cards?.let {
+                adapter.updateCards(it)
+            }
             Log.d("CardListFragment", "Number of cards received: ${cards.size}")
-            adapter.submitList(cards)
         })
     }
 

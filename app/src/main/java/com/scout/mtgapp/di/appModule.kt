@@ -11,4 +11,8 @@ val appModule = module {
 
     // Repository
     single { CardRepository() }
+
+    // Database and DAOs
+    single { provideDatabase(get()) }
+    single { provideCardDao(get()) }
 }

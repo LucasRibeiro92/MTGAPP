@@ -5,17 +5,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.scout.mtgapp.data.entity.card.Card
+import com.scout.mtgapp.data.remote.entity.CardResponse
 import com.scout.mtgapp.data.repository.CardRepository
 import kotlinx.coroutines.launch
 
 class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
 
-    private val _cards = MutableLiveData<List<Card>>()
-    val cards: LiveData<List<Card>> get() = _cards
+    private val _cards = MutableLiveData<List<CardResponse>>()
+    val cards: LiveData<List<CardResponse>> get() = _cards
 
-    private val _card = MutableLiveData<Card>()
-    val card: LiveData<Card> get() = _card
+    private val _card = MutableLiveData<CardResponse>()
+    val card: LiveData<CardResponse> get() = _card
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error

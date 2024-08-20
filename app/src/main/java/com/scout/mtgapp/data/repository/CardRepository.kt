@@ -1,13 +1,13 @@
 package com.scout.mtgapp.data.repository
 
 import android.util.Log
-import com.scout.mtgapp.data.entity.card.Card
+import com.scout.mtgapp.data.remote.entity.CardResponse
 import com.scout.mtgapp.data.remote.ScryfallApiClient
 
 class CardRepository {
     private val apiService = ScryfallApiClient.apiService
 
-    suspend fun searchCards(query: String): List<Card> {
+    suspend fun searchCards(query: String): List<CardResponse> {
         return try {
             val response = apiService.searchCards(query)
             Log.d("CardRepository", "API response: $response")
@@ -23,7 +23,7 @@ class CardRepository {
     }
 
     // Nova função para obter uma carta específica
-    suspend fun getCard(id: String): Card {
+    suspend fun getCard(id: String): CardResponse {
         val response = apiService.getCard(id)
         if (response.isSuccessful) {
             return response.body() ?: throw Exception("Card not found")
@@ -32,8 +32,8 @@ class CardRepository {
         }
     }
 
-    suspend fun loadRandomCards(count: Int = 10): List<Card> {
-        val randomCards = mutableListOf<Card>()
+    suspend fun loadRandomCards(count: Int = 10): List<CardResponse> {
+        val randomCards = mutableListOf<CardResponse>()
         repeat(count) {
             try {
                 val response = apiService.getRandomCard()
