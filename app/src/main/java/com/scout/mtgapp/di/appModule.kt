@@ -10,7 +10,7 @@ val appModule = module {
     viewModel { CardViewModel(get()) }
 
     // Repository
-    single { CardRepository() }
+    single { CardRepository(get()) }
 
     // Database and DAOs
     single { provideDatabase(get()) }

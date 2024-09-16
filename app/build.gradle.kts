@@ -38,6 +38,10 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.1"
     }
 }
 
@@ -51,57 +55,52 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.retrofit)
     implementation(libs.car.ui.lib)
+    implementation(libs.coil.compose)
+    implementation(libs.firebase.analytics)
     implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.androidx.material3.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.activity.compose)
 
     /*
-    * Firebase
+    *
+    *  FIREBASE
+    *
      */
     // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation(libs.firebase.bom)
     // When using the BoM, don't specify versions in Firebase dependencies
-    implementation("com.google.firebase:firebase-analytics")
     //Auth
-    implementation("com.firebaseui:firebase-ui-auth:7.2.0")
+    implementation(libs.firebase.ui.auth)
 
-    //Lifecycle
-    /*
-
-    * implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
-    * implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    *
-    * */
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
-
-    //Koin
-    /*
-    * implementation("io.insert-koin:koin-core:3.2.2")
-    * implementation("io.insert-koin:koin-android:3.2.2")
-    *
-    * */
-    implementation("io.insert-koin:koin-android:3.2.0")
-    implementation("io.insert-koin:koin-android-compat:3.2.0")
-    implementation("io.insert-koin:koin-androidx-compose:3.4.5")
-
-    //Room
     /*
     *
-    * implementation("androidx.room:room-runtime:2.3.0")
-    * kapt("androidx.room:room-compiler:2.3.0")
+    *  LIFECYCLE
     *
-    * implementation("androidx.room:room-runtime:2.5.2")
-    * kapt("androidx.room:room-compiler:2.5.2")
-    * implementation("androidx.room:room-ktx:2.5.2")
-    * implementation("androidx.room:room-testing:2.5.2")
+     */
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.5")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.5")
+
+    /*
     *
-     * */
-    implementation("androidx.room:room-runtime:2.5.0")
-    implementation("androidx.room:room-ktx:2.5.0")
-    kapt("androidx.room:room-compiler:2.5.0")
-    implementation("androidx.room:room-testing:2.5.1")
+    *  KOIN
+    *
+     */
+    implementation("io.insert-koin:koin-android:3.4.0")
+    implementation(libs.koin.android.compat)
+    implementation(libs.koin.androidx.compose)
+
+    /*
+    *
+    *  ROOM
+    *
+     */
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-testing:2.6.1")
 
     /*
     *
@@ -112,13 +111,26 @@ dependencies {
 
     /*
     *
+    *  COMPOSE
+    *
+     */
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.tooling)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+
+    /*
+    *
     *  TESTS
     *
      */
-    testImplementation("io.mockk:mockk:1.12.3")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-    testImplementation("androidx.arch.core:core-testing:2.1.0") // Para InstantTaskExecutorRule
-    testImplementation("io.insert-koin:koin-test:3.2.0")
-    testImplementation("io.insert-koin:koin-test-junit4:3.2.0")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.core.testing) // Para InstantTaskExecutorRule
+    testImplementation(libs.koin.test)
+    testImplementation(libs.koin.test.junit4)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

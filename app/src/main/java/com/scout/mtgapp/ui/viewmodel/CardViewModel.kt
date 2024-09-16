@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.scout.mtgapp.data.local.entity.card.Card
 import com.scout.mtgapp.data.remote.entity.CardResponse
 import com.scout.mtgapp.data.repository.CardRepository
 import kotlinx.coroutines.launch
@@ -55,5 +56,28 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
                 _error.value = e.message
             }
         }
+    }
+
+    fun saveCard(cardResponse: CardResponse) {
+        val cardEntity = cardResponse.toCard()
+        viewModelScope.launch {
+            cardRepository.saveCard(cardEntity)
+        }
+    }
+
+    // Função de conversão no ViewModel
+    private fun CardResponse.toCard(): Card {
+        return Card(
+            id = this.id,
+            name = this.name,
+            imageUri = this.imageUris?.large ?: "",
+            typeLine = this.typeLine,
+            oracleText = this.oracleText,
+            power = this.power,
+            toughness = this.toughness,
+            setName = this.setName,
+            rarity = this.rarity,
+            cmc = this.cmc
+        )
     }
 }

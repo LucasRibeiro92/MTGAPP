@@ -33,7 +33,8 @@ class CardListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val adapter = CardAdapter(
-            emptyList()
+            emptyList(),
+            viewModel,
         ) { card ->
             (activity as HomeActivity).showCardDetails(card)
         }

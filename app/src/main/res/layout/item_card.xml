@@ -9,9 +9,9 @@
     android:focusable="true"
     android:strokeColor="@color/colorPrimary"
     android:elevation="4dp"
-    android:backgroundTint="@color/vermeioClaro">
+    android:backgroundTint="@color/brancoGelo">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -19,9 +19,8 @@
 
         <ImageView
             android:id="@+id/card_image"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="200dp"
-            android:scaleType="centerCrop"
             android:contentDescription="teste"
             android:background="?attr/selectableItemBackgroundBorderless" />
 
@@ -33,16 +32,29 @@
             android:textStyle="bold"
             android:textColor="@android:color/black"
             android:paddingTop="8dp"
-            android:paddingBottom="4dp" />
+            android:paddingBottom="4dp"
+            android:layout_toEndOf="@+id/card_image"/>
 
         <TextView
             android:id="@+id/card_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:textColor="@android:color/darker_gray"
-            android:paddingBottom="8dp" />
+            android:textColor="@color/cinzaEscuro"
+            android:paddingBottom="8dp"
+            android:layout_toEndOf="@+id/card_image"
+            android:layout_below="@+id/card_name" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/card_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/cinzaEscuro"
+            android:paddingBottom="8dp"
+            android:layout_toEndOf="@+id/card_image"
+            android:layout_below="@+id/card_type" />
+
+    </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>

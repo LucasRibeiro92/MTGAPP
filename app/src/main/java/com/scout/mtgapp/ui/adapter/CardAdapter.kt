@@ -6,10 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.scout.mtgapp.R
 import com.scout.mtgapp.data.remote.entity.CardResponse
 import com.scout.mtgapp.databinding.ItemCardBinding
+import com.scout.mtgapp.ui.viewmodel.CardViewModel
 import com.squareup.picasso.Picasso
 
 class CardAdapter(
     private var cards: List<CardResponse>,  // Lista inicial de cartas
+    private val cardViewModel: CardViewModel,
     private val onCardClick: (CardResponse) -> Unit  // Função de callback para cliques
 ) : RecyclerView.Adapter<CardAdapter.CardViewHolder>() {
 
@@ -37,11 +39,20 @@ class CardAdapter(
         fun bind(card: CardResponse) {
             binding.cardName.text = card.name
             binding.cardType.text = card.typeLine
+            binding.cardText.text = card.oracleText
 
+            //Log.d("CardAdapter", card.imageUris?.normal.)
             Picasso.get()
                 .load(card.imageUris?.normal)
                 .placeholder(R.drawable.img_placeholder)
                 .into(binding.cardImage)
+
+
+            // Observe the favorite status
+           /* cardViewModel.isArticleFavorite(article.url).observe(owner) { isFavorite ->
+                val favoriteIconRes = if (isFavorite) R.drawable.baseline_favorite_24 else R.drawable.baseline_favorite_border_24
+                binding.ivFavoriteIcon.setImageResource(favoriteIconRes)
+            }*/
 
             itemView.setOnClickListener {
                 onCardClick(card)

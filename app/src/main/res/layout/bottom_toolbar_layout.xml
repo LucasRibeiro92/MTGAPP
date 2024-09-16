@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:theme="@style/ToolbarStyle">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ivBottomBarCardList"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="90dp"
+            android:src="@drawable/baseline_search_24"
+            android:contentDescription="TODO"
+            android:layout_marginTop="15dp"/>
+
+        <ImageView
+            android:id="@+id/ivBottomBarCardDetail"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/baseline_details_24"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="TODO"
+            android:layout_toEndOf="@+id/ivBottomBarCardList"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="15dp"/>
+
+        <ImageView
+            android:id="@+id/ivBottomBarCardListFavorite"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="16dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/baseline_favorite_border_24"
+            android:contentDescription="TODO"
+            android:layout_toEndOf="@+id/ivBottomBarCardDetail"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="15dp"/>
+
+    </RelativeLayout>
+
+
+
+</androidx.appcompat.widget.Toolbar>

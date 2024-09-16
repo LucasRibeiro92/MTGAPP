@@ -5,7 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.scout.mtgapp.R
+import com.scout.mtgapp.data.local.entity.card.Card
 import com.scout.mtgapp.data.remote.entity.CardResponse
 import com.scout.mtgapp.databinding.FragmentCardDetailBinding
 import com.scout.mtgapp.ui.viewmodel.CardViewModel
@@ -14,34 +19,44 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class CardDetailFragment : Fragment() {
 
-    private var _binding: FragmentCardDetailBinding? = null
-    private val binding get() = _binding!!
-
     private val viewModel by activityViewModel<CardViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentCardDetailBinding.inflate(inflater, container, false)
+        val binding = FragmentCardDetailBinding.inflate(inflater, container, false)
+
+        binding.composeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                MaterialTheme {
+                    val card = arguments?.getParcelable<CardResponse>("card")
+                    if (card != null) {
+                        CardDetailScreen(card)
+                    } else {
+                        Text("Nenhuma carta selecionada.")
+                    }
+                }
+            }
+        }
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val card = arguments?.getParcelable<CardResponse>("card")
-        card?.let {
-            binding.cardName.text = it.name
-            binding.cardType.text = it.typeLine
-            Picasso.get()
-                .load(card.imageUris?.normal)
-                .placeholder(R.drawable.img_placeholder)
-                .into(binding.cardImage)
-        }
+    // Função de conversão de CardResponse para CardEntity
+    private fun CardResponse.toCardEntity(): Card {
+        return Card(
+            id = this.id,
+            name = this.name,
+            imageUri = this.imageUris?.large ?: "",
+            typeLine = this.typeLine,
+            oracleText = this.oracleText,
+            power = this.power,
+            toughness = this.toughness,
+            setName = this.setName,
+            rarity = this.rarity,
+            cmc = this.cmc
+        )
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

@@ -1,10 +1,14 @@
 package com.scout.mtgapp.data.repository
 
 import android.util.Log
+import com.scout.mtgapp.data.local.dao.CardDao
+import com.scout.mtgapp.data.local.entity.card.Card
 import com.scout.mtgapp.data.remote.entity.CardResponse
 import com.scout.mtgapp.data.remote.ScryfallApiClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class CardRepository {
+class CardRepository(private val cardDao: CardDao) {
     private val apiService = ScryfallApiClient.apiService
 
     suspend fun searchCards(query: String): List<CardResponse> {
@@ -48,5 +52,15 @@ class CardRepository {
             }
         }
         return randomCards
+    }
+
+    suspend fun saveCard(card: Card) {
+        withContext(Dispatchers.IO) {
+            try {
+                cardDao.insert(card)
+            } catch (e: Exception) {
+                throw e
+            }
+        }
     }
 }

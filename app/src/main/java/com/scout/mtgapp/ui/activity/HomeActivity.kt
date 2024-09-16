@@ -31,6 +31,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         setupSearchView()
+        setupBottomToolbar()
     }
 
     private fun setupBindings() {
@@ -51,6 +52,13 @@ class HomeActivity : AppCompatActivity() {
                 return false
             }
         })
+    }
+
+    private fun setupBottomToolbar() {
+        // Configurar o ícone de menu
+        binding.includeBottomToolbar.ivBottomBarCardList.setOnClickListener { showCardListFragment(null) }
+        //binding.includeBottomToolbar.ivBottomBarCardDetail.setOnClickListener { showMenu(it) }
+        //binding.includeBottomToolbar.ivBottomBarCardListFavorite.setOnClickListener { showMenu(it) }
     }
 
     private fun showCardListFragment(query: String?) {
