@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.scout.mtgapp.data.remote.entity.CardResponse
@@ -33,7 +34,6 @@ fun CardDetailScreen(card: CardResponse) {
             contentDescription = card.name,
             contentScale = ContentScale.FillHeight,
             modifier = Modifier
-                .fillMaxWidth()
                 .height(400.dp)
         )
 
@@ -41,7 +41,7 @@ fun CardDetailScreen(card: CardResponse) {
 
         Text(text = card.name, style = MaterialTheme.typography.titleLarge)
         Text(text = card.typeLine, style = MaterialTheme.typography.bodyMedium)
-        Text(text = card.oracleText, style = MaterialTheme.typography.bodySmall)
+        Text(text = card.oracleText, style = MaterialTheme.typography.bodyMedium)
 
         Spacer(modifier = Modifier.height(16.dp))
 

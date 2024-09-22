@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 class CardRepository(private val cardDao: CardDao) {
     private val apiService = ScryfallApiClient.apiService
 
+    //Search Cards by Name
     suspend fun searchCards(query: String): List<CardResponse> {
         return try {
             val response = apiService.searchCards(query)
@@ -26,7 +27,7 @@ class CardRepository(private val cardDao: CardDao) {
         }
     }
 
-    // Nova função para obter uma carta específica
+    // Get a Card by ID
     suspend fun getCard(id: String): CardResponse {
         val response = apiService.getCard(id)
         if (response.isSuccessful) {
@@ -36,24 +37,17 @@ class CardRepository(private val cardDao: CardDao) {
         }
     }
 
-    suspend fun loadRandomCards(count: Int = 10): List<CardResponse> {
-        val randomCards = mutableListOf<CardResponse>()
-        repeat(count) {
-            try {
-                val response = apiService.getRandomCard()
-                if (response.isSuccessful) {
-                    response.body()?.let { randomCards.add(it) }
-                    Log.d("CardRepository", response.body().toString())
-                } else {
-                    Log.e("CardRepository", "Error fetching random card: ${response.message()}")
-                }
-            } catch (e: Exception) {
-                Log.e("CardRepository", "Error fetching random card", e)
-            }
+    // Get a random Card
+    suspend fun loadRandomCards(): CardResponse {
+        val response = apiService.getRandomCard()
+        if (response.isSuccessful) {
+            return response.body() ?: throw Exception("Error fetching random card")
+        } else {
+            throw Exception(response.message())
         }
-        return randomCards
     }
 
+    // Save a Card into Room
     suspend fun saveCard(card: Card) {
         withContext(Dispatchers.IO) {
             try {

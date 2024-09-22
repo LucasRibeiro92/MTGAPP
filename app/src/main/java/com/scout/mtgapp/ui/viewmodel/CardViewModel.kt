@@ -34,13 +34,13 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
         }
     }
 
-    fun loadRandomCards() {
+    fun loadRandomCard() {
         viewModelScope.launch {
             try {
-                Log.d("CardViewModel", "Loading random cards")
-                _cards.value = cardRepository.loadRandomCards()
+                Log.d("CardViewModel", "Loading random card")
+                _card.value = cardRepository.loadRandomCards()
             } catch (e: Exception) {
-                Log.e("CardViewModel", "Error loading random cards", e)
+                Log.e("CardViewModel", "Error loading random card", e)
                 _error.value = e.message
             }
         }

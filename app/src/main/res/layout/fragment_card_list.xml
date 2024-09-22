@@ -1,33 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe_refresh"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/cvCardList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"/>
 
-        <TextView
-            android:id="@+id/tvCardListTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lista de cartas..."
-            android:textSize="24sp"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCards"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="8dp"
-            android:clipToPadding="false"
-            android:scrollbars="vertical"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            tools:listitem="@layout/item_card"
-            android:layout_below="@+id/tvCardListTitle"/>
-
-    </RelativeLayout>
-
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</FrameLayout>

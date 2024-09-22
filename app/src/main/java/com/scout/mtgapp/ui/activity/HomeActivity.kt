@@ -8,6 +8,8 @@ import com.scout.mtgapp.data.remote.entity.CardResponse
 import com.scout.mtgapp.databinding.ActivityHomeBinding
 import com.scout.mtgapp.ui.fragment.CardDetailFragment
 import com.scout.mtgapp.ui.fragment.CardListFragment
+import com.scout.mtgapp.ui.viewmodel.CardViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeActivity : AppCompatActivity() {
 
@@ -17,6 +19,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private val fragmentManager = supportFragmentManager
     private val TAG: String = "MT - Home Activity"
+    private val viewModel by viewModel<CardViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +30,8 @@ class HomeActivity : AppCompatActivity() {
         setupBindings()
 
         if (savedInstanceState == null) {
-            showCardListFragment(null)
+            viewModel.loadRandomCard()
+            showCardDetails()
         }
 
         setupSearchView()
@@ -71,6 +75,15 @@ class HomeActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
+    fun showCardDetails() {
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        val fragment = CardDetailFragment()
+
+        fragmentTransaction.replace(R.id.fragment_container, fragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
+    }
+    /*
     fun showCardDetails(card: CardResponse) {
         val fragmentTransaction = fragmentManager.beginTransaction()
         val bundle = Bundle().apply { putParcelable("card", card) }
@@ -79,5 +92,5 @@ class HomeActivity : AppCompatActivity() {
         fragmentTransaction.replace(R.id.fragment_container, fragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
-    }
+    }*/
 }

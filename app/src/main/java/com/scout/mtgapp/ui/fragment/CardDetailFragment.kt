@@ -27,7 +27,7 @@ class CardDetailFragment : Fragment() {
     ): View? {
         val binding = FragmentCardDetailBinding.inflate(inflater, container, false)
 
-        binding.composeView.apply {
+        binding.cvCardDetail.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 MaterialTheme {
