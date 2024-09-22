@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.scout.mtgapp.R
@@ -31,9 +33,12 @@ class CardDetailFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 MaterialTheme {
-                    val card = arguments?.getParcelable<CardResponse>("card")
+                    // Observe as mudanças no card do ViewModel
+                    val card by viewModel.card.collectAsState() // Usando StateFlow ou LiveData
+
                     if (card != null) {
-                        CardDetailScreen(card)
+                        // Exibir os detalhes da carta
+                        CardDetailScreen(card!!)
                     } else {
                         Text("Nenhuma carta selecionada.")
                     }

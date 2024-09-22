@@ -9,24 +9,56 @@
     android:orientation="vertical"
     tools:context=".ui.activity.HomeActivity">
 
-    <include
-        android:id="@+id/include_toolbar"
-        layout="@layout/toolbar_layout" />
-
-    <SearchView
-        android:id="@+id/search_view"
+    <!-- Top bar e Search combinados em Compose -->
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/cvTopBarNSearch"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:queryHint="Search for cards" />
+        android:layout_height="wrap_content" />
 
+    <!-- Fragmento que será trocado dinamicamente -->
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <include
-        android:id="@+id/include_bottom_toolbar"
-        layout="@layout/bottom_toolbar_layout" />
+    <!-- Bottom bar em Compose -->
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/cvBottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
+
+    <!--<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.activity.HomeActivity">
+
+        <include
+            android:id="@+id/include_toolbar"
+            layout="@layout/toolbar_layout" />
+
+        <SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:queryHint="Search for cards" />
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <include
+            android:id="@+id/include_bottom_toolbar"
+            layout="@layout/bottom_toolbar_layout" />
+
+    </LinearLayout>-->

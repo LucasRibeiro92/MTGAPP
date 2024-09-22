@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.scout.mtgapp.data.local.entity.card.Card
 import com.scout.mtgapp.data.remote.entity.CardResponse
 import com.scout.mtgapp.data.repository.CardRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
@@ -15,8 +17,8 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
     private val _cards = MutableLiveData<List<CardResponse>>()
     val cards: LiveData<List<CardResponse>> get() = _cards
 
-    private val _card = MutableLiveData<CardResponse>()
-    val card: LiveData<CardResponse> get() = _card
+    private val _card = MutableStateFlow<CardResponse?>(null)
+    val card: StateFlow<CardResponse?> = _card
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error

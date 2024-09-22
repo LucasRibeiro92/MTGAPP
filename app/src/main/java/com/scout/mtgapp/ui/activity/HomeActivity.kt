@@ -3,6 +3,8 @@ package com.scout.mtgapp.ui.activity
 import android.os.Bundle
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.MaterialTheme
 import com.scout.mtgapp.R
 import com.scout.mtgapp.data.remote.entity.CardResponse
 import com.scout.mtgapp.databinding.ActivityHomeBinding
@@ -34,15 +36,35 @@ class HomeActivity : AppCompatActivity() {
             showCardDetails()
         }
 
-        setupSearchView()
-        setupBottomToolbar()
+        //setupSearchView()
+        //setupBottomToolbar()
     }
 
     private fun setupBindings() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-    }
 
+        // Configura a top bar e search view com Compose
+        binding.cvTopBarNSearch.setContent {
+            MaterialTheme {
+                Column {
+                    TopBar()  // Função Compose da sua top bar
+                    SearchViewComponent { query ->
+                        // Quando o usuário submeter a pesquisa, exibe a lista de resultados
+                        showCardListFragment(query)
+                    }
+                }
+            }
+        }
+
+        // Configura a bottom bar com Compose
+        binding.cvBottomBar.setContent {
+            MaterialTheme {
+                BottomBarComponent()  // Função Compose da sua bottom bar
+            }
+        }
+    }
+    /*
     private fun setupSearchView() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -60,11 +82,11 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setupBottomToolbar() {
         // Configurar o ícone de menu
-        binding.includeBottomToolbar.ivBottomBarCardList.setOnClickListener { showCardListFragment(null) }
-        //binding.includeBottomToolbar.ivBottomBarCardDetail.setOnClickListener { showMenu(it) }
+        //binding.includeBottomToolbar.ivBottomBarCardList.setOnClickListener { showCardListFragment(null) }
+        binding.includeBottomToolbar.ivBottomBarCardDetail.setOnClickListener { showCardDetails() }
         //binding.includeBottomToolbar.ivBottomBarCardListFavorite.setOnClickListener { showMenu(it) }
     }
-
+*/
     private fun showCardListFragment(query: String?) {
         val fragmentTransaction = fragmentManager.beginTransaction()
         val bundle = Bundle().apply { putString("query", query) }
@@ -75,7 +97,7 @@ class HomeActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
-    fun showCardDetails() {
+    internal fun showCardDetails() {
         val fragmentTransaction = fragmentManager.beginTransaction()
         val fragment = CardDetailFragment()
 
@@ -83,14 +105,4 @@ class HomeActivity : AppCompatActivity() {
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }
-    /*
-    fun showCardDetails(card: CardResponse) {
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        val bundle = Bundle().apply { putParcelable("card", card) }
-        val fragment = CardDetailFragment().apply { arguments = bundle }
-
-        fragmentTransaction.replace(R.id.fragment_container, fragment)
-        fragmentTransaction.addToBackStack(null)
-        fragmentTransaction.commit()
-    }*/
 }
