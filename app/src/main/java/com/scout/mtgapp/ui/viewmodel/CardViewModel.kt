@@ -20,6 +20,9 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
     private val _card = MutableStateFlow<CardResponse?>(null)
     val card: StateFlow<CardResponse?> = _card
 
+    private val _randomCard = MutableLiveData<CardResponse?>()
+    val randomCard: LiveData<CardResponse?> get() = _randomCard
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
@@ -40,7 +43,7 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 Log.d("CardViewModel", "Loading random card")
-                _card.value = cardRepository.loadRandomCards()
+                _randomCard.value = cardRepository.loadRandomCards()
             } catch (e: Exception) {
                 Log.e("CardViewModel", "Error loading random card", e)
                 _error.value = e.message

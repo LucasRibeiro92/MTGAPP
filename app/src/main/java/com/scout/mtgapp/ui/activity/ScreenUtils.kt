@@ -1,6 +1,11 @@
 package com.scout.mtgapp.ui.activity
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -19,6 +24,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.scout.mtgapp.ui.theme.BrightRed
 
 
 @Composable
@@ -33,11 +43,36 @@ fun SearchBar(
         onValueChange = onQueryChanged,
         label = { Text("Search for cards...") },
         singleLine = true,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp)
+            .clip(
+                RoundedCornerShape(
+                    topStart = 8.dp,
+                    topEnd = 8.dp,
+                    bottomStart = 8.dp,
+                    bottomEnd = 8.dp
+                )
+            ),
         trailingIcon = {
             IconButton(onClick = { onSearch() }) {
                 Icon(Icons.Default.Search, contentDescription = "Search Icon")
             }
         }
+    )
+}
+
+@Composable
+fun GradientBox(
+    modifier: Modifier
+) {
+    Box(
+        modifier = modifier.background(brush = Brush.linearGradient(
+            listOf(
+                BrightRed,
+                Color.Black
+            )
+        ))
     )
 }
 

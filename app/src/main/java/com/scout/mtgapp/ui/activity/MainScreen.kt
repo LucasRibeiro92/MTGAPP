@@ -1,28 +1,28 @@
 package com.scout.mtgapp.ui.activity
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.scout.mtgapp.data.remote.entity.CardResponse
 import com.scout.mtgapp.ui.fragment.CardDetailScreen
 import com.scout.mtgapp.ui.fragment.CardListScreen
+import com.scout.mtgapp.ui.theme.BrightRed
 import com.scout.mtgapp.ui.viewmodel.CardViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,34 +30,79 @@ import com.scout.mtgapp.ui.viewmodel.CardViewModel
 fun MainScreen(viewModel: CardViewModel) {
 
     var selectedTab by remember { mutableIntStateOf(1) }
-    var selectedCard by remember { mutableStateOf<CardResponse?>(null) }  // Para armazenar o card selecionado
+    var selectedCard by remember { mutableStateOf<CardResponse?>(null) }
     var searchQuery by remember { mutableStateOf("") }
 
-    /*// Chama o método para carregar a carta aleatória ao iniciar
+    // Carrega uma carta aleatória ao iniciar o Composable
     LaunchedEffect(Unit) {
-        viewModel.loadRandomCard()
-    }*/
+        viewModel.loadRandomCard() // Carrega a carta aleatória
+    }
+
+    // Observa o card carregado aleatoriamente no ViewModel
+    val randomCard by viewModel.randomCard.observeAsState()
+
+    // Se o card aleatório for carregado, atualiza o card selecionado
+    LaunchedEffect(randomCard) {
+        randomCard?.let {
+            selectedCard = it
+            selectedTab = 1 // Muda para a aba de detalhes da carta
+        }
+    }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    SearchBar(
-                        query = searchQuery,
-                        onQueryChanged = { newQuery -> searchQuery = newQuery },
-                        onSearch = {
-                            viewModel.searchCards(searchQuery) // Chama a função de busca no ViewModel
-                            selectedTab = 0
-                        }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(
+                        RoundedCornerShape(
+                            bottomStart = 20.dp,
+                            bottomEnd = 20.dp
+                        )
                     )
-                }
-            )
+                    .background(brush = Brush.linearGradient(
+                        listOf(
+                            BrightRed,
+                            Color.Black
+                        )
+                    ))
+                    .padding(bottom = 8.dp) // Espaçamento para separar o título da SearchBar
+            ) {
+                // Título no centro com 25sp
+                Text(
+                    text = "Magic App",
+                    fontSize = 35.sp,
+                    fontFamily = FontFamily.Cursive,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp, bottom = 8.dp)
+                        .wrapContentSize(Alignment.Center) // Centraliza o título
+                )
+
+                // Barra de pesquisa logo abaixo do título
+                SearchBar(
+                    query = searchQuery,
+                    onQueryChanged = { newQuery -> searchQuery = newQuery },
+                    onSearch = {
+                        viewModel.searchCards(searchQuery) // Chama a função de busca no ViewModel
+                        selectedTab = 0
+                    }
+                )
+            }
         },
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(
+                    icon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    label = { Text("Search") },
+                    selected = selectedTab == 0,
+                    onClick = { selectedTab = 0 }
+                )
+                NavigationBarItem(
                     icon = { Icon(Icons.Default.List, contentDescription = null) },
-                    label = { Text("Cards") },
+                    label = { Text("Saved Cards") },
                     selected = selectedTab == 0,
                     onClick = { selectedTab = 0 }
                 )
@@ -73,13 +118,12 @@ fun MainScreen(viewModel: CardViewModel) {
         Box(modifier = Modifier.padding(innerPadding)) {
             when (selectedTab) {
                 0 -> CardListScreen(viewModel.cards) { cardId ->
-                    // Quando o card for clicado, busca o card e navega para a tela de detalhes
                     viewModel.getCard(cardId)
-                    selectedCard = viewModel.cards.value?.find { it.id == cardId } // Encontrar o card na lista
+                    selectedCard = viewModel.cards.value?.find { it.id == cardId }
                     selectedTab = 1
                 }
                 1 -> {
-                    selectedCard?.let { CardDetailScreen(it) }  // Passa o card selecionado
+                    selectedCard?.let { CardDetailScreen(it) }
                 }
             }
         }

@@ -4,36 +4,34 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
-import androidx.compose.ui.graphics.Color.Companion.LightGray
-import androidx.compose.ui.graphics.Color.Companion.White
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+// Definindo as novas cores
+val DeepRed = Color(0xFF660b15)
+val BrightRed = Color(0xFFab1323)
+val PureWhite = Color(0xFFFFFFFF)
+val LightGray = Color(0xFFE1E1E1)
+val DarkGray = Color(0xFF1C1C1C)
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple200,
-    secondary = Teal200,
-    background = Black,
+    primary = BrightRed,
+    secondary = DeepRed,
+    background = DarkGray,
     surface = DarkGray,
-    onPrimary = White,
-    onSecondary = White,
-    onBackground = White,
-    onSurface = White
+    onPrimary = PureWhite,
+    onSecondary = PureWhite,
+    onBackground = PureWhite,
+    onSurface = LightGray
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple500,
-    secondary = Teal200,
-    background = White,
+    primary = BrightRed,
+    secondary = DeepRed,
+    background = PureWhite,
     surface = LightGray,
-    onPrimary = Black,
-    onSecondary = Black,
-    onBackground = Black,
-    onSurface = Black
+    onPrimary = PureWhite,
+    onSecondary = PureWhite,
+    onBackground = DarkGray,
+    onSurface = DarkGray
 )
 
 @Composable
@@ -49,7 +47,6 @@ fun MTGAppTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        //typography = Typography,
         content = content
     )
 }
