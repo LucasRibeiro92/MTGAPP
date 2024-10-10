@@ -20,6 +20,28 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 
+
+@Composable
+fun SearchBar(
+    query: String,
+    onQueryChanged: (String) -> Unit,
+    onSearch: () -> Unit
+) {
+    // Implementa um campo de texto para a busca
+    TextField(
+        value = query,
+        onValueChange = onQueryChanged,
+        label = { Text("Search for cards...") },
+        singleLine = true,
+        trailingIcon = {
+            IconButton(onClick = { onSearch() }) {
+                Icon(Icons.Default.Search, contentDescription = "Search Icon")
+            }
+        }
+    )
+}
+
+/*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar() {
@@ -58,3 +80,4 @@ fun BottomBarComponent() {
         }
     }
 }
+*/
