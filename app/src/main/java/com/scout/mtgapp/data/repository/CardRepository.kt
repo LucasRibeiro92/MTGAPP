@@ -74,4 +74,16 @@ class CardRepository(private val cardDao: CardDao) {
     fun getAllSavedCards(): LiveData<List<Card>> {
         return cardDao.getAllCards()
     }
+
+    // Função para buscar uma carta pelo ID
+    fun getCardById(cardId: String): Card? {
+        return cardDao.getCardById(cardId)
+    }
+
+    // Função para verificar se o card está no banco de dados
+    suspend fun isCardInDatabase(id: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            cardDao.cardExists(id)  // Executa no contexto de I/O
+        }
+    }
 }

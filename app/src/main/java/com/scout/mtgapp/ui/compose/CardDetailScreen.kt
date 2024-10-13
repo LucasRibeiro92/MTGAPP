@@ -20,7 +20,11 @@ import coil.compose.rememberAsyncImagePainter
 import com.scout.mtgapp.data.remote.entity.CardResponse
 
 @Composable
-fun CardDetailScreen(card: CardResponse, onButtonClick: (CardResponse) -> Unit) {
+fun CardDetailScreen(
+    card: CardResponse,
+    txtButton: String,
+    onButtonClick: (CardResponse) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -47,7 +51,7 @@ fun CardDetailScreen(card: CardResponse, onButtonClick: (CardResponse) -> Unit) 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = { onButtonClick(card) }) {
-            Text(text = "Salvar Carta")
+            Text(text = txtButton)
         }
     }
 }

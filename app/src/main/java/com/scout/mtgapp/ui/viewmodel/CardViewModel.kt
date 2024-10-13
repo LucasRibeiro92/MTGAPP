@@ -30,6 +30,10 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
+    // Flag to indicate if a card is in DB
+    private val _isCardInDatabase = MutableLiveData<Boolean>()
+    val isCardInDatabase: LiveData<Boolean> get() = _isCardInDatabase
+
     // LiveData to store bd saved cards
     val savedCards: LiveData<List<Card>> = cardRepository.getAllSavedCards()
 
@@ -60,7 +64,7 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
         }
     }
 
-    //Function to get a card from Scryfall API.
+    // Function to get a card from Scryfall API.
     fun getCard(id: String) {
         viewModelScope.launch {
             try {
@@ -69,6 +73,19 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
             } catch (e: Exception) {
                 Log.e("CardViewModel", "Error fetching card", e)
                 _error.value = e.message
+            }
+        }
+    }
+
+    // Function to recover and indicate if a card is in DB
+    fun checkCardInDatabase(id: String) {
+        viewModelScope.launch {
+            try {
+                Log.d("CardViewModel", "Checking if card with id: $id is in DB")
+                _isCardInDatabase.value = cardRepository.isCardInDatabase(id)
+            } catch (e: Exception) {
+                Log.e("CardViewModel", "Error checking card in DB", e)
+                _isCardInDatabase.value = false
             }
         }
     }
@@ -82,9 +99,10 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
     }
 
     //Function to delete a card from LocalBD.
-    fun deleteCard(card: Card) {
+    fun deleteCard(card: CardResponse) {
+        val cardEntity = card.toCard()
         viewModelScope.launch {
-            cardRepository.deleteCard(card)
+            cardRepository.deleteCard(cardEntity)
         }
     }
 

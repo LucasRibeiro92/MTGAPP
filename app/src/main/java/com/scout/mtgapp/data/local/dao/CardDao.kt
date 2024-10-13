@@ -12,14 +12,6 @@ import com.scout.mtgapp.util.Constants.CARD_TABLE
 
 @Dao
 interface CardDao {
-    @Query("SELECT * FROM $CARD_TABLE")
-    fun getAllCards(): LiveData<List<Card>>
-
-    /*@Query("SELECT * FROM $CARD_TABLE WHERE id = :eventId")
-    fun getEventById(eventId: String): Card?
-
-    @Query("SELECT * FROM $CARD_TABLE WHERE isPendingSync = 1")
-    fun getPendingSyncEvents(): List<Card>*/
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(card: Card)
@@ -27,6 +19,28 @@ interface CardDao {
     @Delete
     fun delete(card: Card)
 
-    @Update
-    fun update(card: Card)
+    //@Update
+    //fun update(card: Card)
+
+    @Query("SELECT * FROM $CARD_TABLE")
+    fun getAllCards(): LiveData<List<Card>>
+
+    @Query("SELECT * FROM $CARD_TABLE WHERE id = :cardId")
+    fun getCardById(cardId: String): Card?
+
+    @Query("SELECT COUNT(*) > 0 FROM $CARD_TABLE WHERE id = :cardId")
+    fun cardExists(cardId: String): Boolean
+
+
+    /*
+        Complex examples:
+
+            @Query("SELECT * FROM $CARD_TABLE WHERE id = :eventId")
+            fun getEventById(eventId: String): Card?
+
+            @Query("SELECT * FROM $CARD_TABLE WHERE isPendingSync = 1")
+            fun getPendingSyncEvents(): List<Card>
+
+    */
 }
+

@@ -1,10 +1,9 @@
 package com.scout.mtgapp.ui.compose
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
@@ -48,6 +47,8 @@ fun MainScreen(viewModel: CardViewModel) {
             selectedTab = 1 // Muda para a aba de detalhes da carta
         }
     }
+
+    val isCardInDatabase by viewModel.isCardInDatabase.observeAsState()
 
     Scaffold(
         topBar = {
@@ -101,16 +102,16 @@ fun MainScreen(viewModel: CardViewModel) {
                     onClick = { selectedTab = 0 }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.List, contentDescription = null) },
-                    label = { Text("Saved Cards") },
-                    selected = selectedTab == 2,
-                    onClick = { selectedTab = 2 }
-                )
-                NavigationBarItem(
                     icon = { Icon(Icons.Default.Info, contentDescription = null) },
                     label = { Text("Details") },
                     selected = selectedTab == 1,
                     onClick = { selectedTab = 1 }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.List, contentDescription = null) },
+                    label = { Text("Saved Cards") },
+                    selected = selectedTab == 2,
+                    onClick = { selectedTab = 2 }
                 )
             }
         }
@@ -126,9 +127,19 @@ fun MainScreen(viewModel: CardViewModel) {
                     selectedTab = 1
                 }
                 1 -> {
-                    selectedCard?.let { CardDetailScreen(it) { card ->
-                        viewModel.saveCard(card)
-                    } }
+                    selectedCard?.let {
+                        viewModel.checkCardInDatabase(it.id)
+                        Log.d("COMPOSER", isCardInDatabase.toString())
+                        if (isCardInDatabase == true) {
+                            CardDetailScreen(it, "Remover Carta") { card ->
+                                viewModel.deleteCard(card)
+                            }
+                        } else {
+                            CardDetailScreen(it, "Salvar Carta") { card ->
+                                viewModel.saveCard(card)
+                            }
+                        }
+                    }
                 }
                 2 -> {
                     CardListScreen(viewModel.savedCards) { }
