@@ -1,8 +1,10 @@
-package com.scout.mtgapp.ui.activity
+package com.scout.mtgapp.ui.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
@@ -20,8 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.scout.mtgapp.data.remote.entity.CardResponse
-import com.scout.mtgapp.ui.fragment.CardDetailScreen
-import com.scout.mtgapp.ui.fragment.CardListScreen
 import com.scout.mtgapp.ui.theme.BrightRed
 import com.scout.mtgapp.ui.viewmodel.CardViewModel
 
@@ -115,7 +115,10 @@ fun MainScreen(viewModel: CardViewModel) {
             }
         }
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+        ) {
             when (selectedTab) {
                 0 -> CardListScreen(viewModel.cards) { cardId ->
                     viewModel.getCard(cardId)

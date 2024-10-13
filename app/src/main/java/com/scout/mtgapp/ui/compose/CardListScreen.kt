@@ -1,4 +1,4 @@
-package com.scout.mtgapp.ui.fragment
+package com.scout.mtgapp.ui.compose
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
