@@ -22,19 +22,20 @@ import com.scout.mtgapp.data.local.entity.card.Card
 import com.scout.mtgapp.data.remote.entity.CardResponse
 
 @Composable
-fun CardListScreen(savedCards: LiveData<List<Card>>, onCardClick: (String) -> Unit) {
+fun CardResponseListScreen(cardList: LiveData<List<CardResponse>>, onCardClick: (String) -> Unit) {
 
-    val savCards by savedCards.observeAsState(initial = emptyList()) // Observa o LiveData e atualiza a UI
+    val cards by cardList.observeAsState(initial = emptyList()) // Observa o LiveData e atualiza a UI
 
     LazyColumn {
-        items(savCards) { card ->
-            CardItem(card = card, onCardClick = onCardClick)
+        items(cards) { card ->
+            // Exibe cada carta
+            CardResponseItem(card = card, onCardClick = onCardClick)
         }
     }
 }
 
 @Composable
-fun CardItem(card: Card, onCardClick: (String) -> Unit) {
+fun CardResponseItem(card: CardResponse, onCardClick: (String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -47,7 +48,7 @@ fun CardItem(card: Card, onCardClick: (String) -> Unit) {
         Column(modifier = Modifier.padding(16.dp)) {
             // Exibindo imagem da carta
             AsyncImage(
-                model = card.imageUri, // Certifique-se de que 'imageUrl' está correto no CardResponse
+                model = card.imageUris?.small, // Certifique-se de que 'imageUrl' está correto no CardResponse
                 contentDescription = card.name,
                 modifier = Modifier
                     .fillMaxWidth()

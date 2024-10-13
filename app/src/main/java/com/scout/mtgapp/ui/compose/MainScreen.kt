@@ -103,8 +103,8 @@ fun MainScreen(viewModel: CardViewModel) {
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.List, contentDescription = null) },
                     label = { Text("Saved Cards") },
-                    selected = selectedTab == 0,
-                    onClick = { selectedTab = 0 }
+                    selected = selectedTab == 2,
+                    onClick = { selectedTab = 2 }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Info, contentDescription = null) },
@@ -120,13 +120,18 @@ fun MainScreen(viewModel: CardViewModel) {
                 .padding(innerPadding)
         ) {
             when (selectedTab) {
-                0 -> CardListScreen(viewModel.cards) { cardId ->
+                0 -> CardResponseListScreen(viewModel.cards) { cardId ->
                     viewModel.getCard(cardId)
                     selectedCard = viewModel.cards.value?.find { it.id == cardId }
                     selectedTab = 1
                 }
                 1 -> {
-                    selectedCard?.let { CardDetailScreen(it) }
+                    selectedCard?.let { CardDetailScreen(it) { card ->
+                        viewModel.saveCard(card)
+                    } }
+                }
+                2 -> {
+                    CardListScreen(viewModel.savedCards) { }
                 }
             }
         }

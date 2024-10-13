@@ -14,18 +14,26 @@ import kotlinx.coroutines.launch
 
 class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
 
+    // Variable to store a list of cards
     private val _cards = MutableLiveData<List<CardResponse>>()
     val cards: LiveData<List<CardResponse>> get() = _cards
 
+    // Variable to store a card
     private val _card = MutableStateFlow<CardResponse?>(null)
     val card: StateFlow<CardResponse?> = _card
 
+    // Variable to store a random card
     private val _randomCard = MutableLiveData<CardResponse?>()
     val randomCard: LiveData<CardResponse?> get() = _randomCard
 
+    // Variable to store errors during the process
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
+    // LiveData to store bd saved cards
+    val savedCards: LiveData<List<Card>> = cardRepository.getAllSavedCards()
+
+    //Function to search card on Scryfall API resulting in a list of cards
     fun searchCards(query: String) {
         viewModelScope.launch {
             try {
@@ -39,6 +47,7 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
         }
     }
 
+    //Function to search a random card on Scryfall API.
     fun loadRandomCard() {
         viewModelScope.launch {
             try {
@@ -51,6 +60,7 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
         }
     }
 
+    //Function to get a card from Scryfall API.
     fun getCard(id: String) {
         viewModelScope.launch {
             try {
@@ -63,6 +73,7 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
         }
     }
 
+    //Function to save a card into LocalBD.
     fun saveCard(cardResponse: CardResponse) {
         val cardEntity = cardResponse.toCard()
         viewModelScope.launch {
@@ -70,7 +81,14 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
         }
     }
 
-    // Função de conversão no ViewModel
+    //Function to delete a card from LocalBD.
+    fun deleteCard(card: Card) {
+        viewModelScope.launch {
+            cardRepository.deleteCard(card)
+        }
+    }
+
+    //CardResponse into CardEntity
     private fun CardResponse.toCard(): Card {
         return Card(
             id = this.id,

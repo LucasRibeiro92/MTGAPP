@@ -1,6 +1,7 @@
 package com.scout.mtgapp.data.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.scout.mtgapp.data.local.dao.CardDao
 import com.scout.mtgapp.data.local.entity.card.Card
 import com.scout.mtgapp.data.remote.entity.CardResponse
@@ -56,5 +57,21 @@ class CardRepository(private val cardDao: CardDao) {
                 throw e
             }
         }
+    }
+
+    // Delete a Card from Room
+    suspend fun deleteCard(card: Card) {
+        withContext(Dispatchers.IO) {
+            try {
+                cardDao.delete(card)
+            } catch (e: Exception) {
+                throw e
+            }
+        }
+    }
+
+    // Função para buscar todas as cartas salvas
+    fun getAllSavedCards(): LiveData<List<Card>> {
+        return cardDao.getAllCards()
     }
 }
