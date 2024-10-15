@@ -23,7 +23,7 @@ interface CardDao {
     //fun update(card: Card)
 
     @Query("SELECT * FROM $CARD_TABLE")
-    fun getAllCards(): LiveData<List<Card>>
+    fun getAllCards(): List<Card>
 
     @Query("SELECT * FROM $CARD_TABLE WHERE id = :cardId")
     fun getCardById(cardId: String): Card?

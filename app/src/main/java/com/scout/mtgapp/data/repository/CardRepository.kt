@@ -71,7 +71,7 @@ class CardRepository(private val cardDao: CardDao) {
     }
 
     // Função para buscar todas as cartas salvas
-    fun getAllSavedCards(): LiveData<List<Card>> {
+    fun getAllSavedCards(): List<Card> {
         return cardDao.getAllCards()
     }
 

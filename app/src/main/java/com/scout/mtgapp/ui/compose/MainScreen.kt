@@ -22,33 +22,49 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.scout.mtgapp.data.remote.entity.CardResponse
 import com.scout.mtgapp.ui.theme.BrightRed
+import com.scout.mtgapp.ui.viewmodel.CardState
 import com.scout.mtgapp.ui.viewmodel.CardViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(viewModel: CardViewModel) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    when (uiState) {
+        is CardState.Loading -> {
+            // Exibe a tela de carregamento
+        }
+        is CardState.Success -> {
+            val card = viewModel.card
+            val selectedTab = viewModel.uiState.selectedTab
+
+            when (selectedTab) {
+                1 -> {
+                    // Exibe a tela de detalhes da carta
+                    CardDetailScreen(card)
+                }
+                2 -> {
+                    // Exibe a tela da lista de cartas, por exemplo
+                    CardListScreen()
+                }
+                // Outros casos para diferentes abas/telas
+            }
+        }
+        is CardState.Error -> {
+            // Exibe a tela de erro com a mensagem
+            ErrorScreen(uiState.message)
+        }
+    }
+}
+/*
+@Composable
+fun MainScreen(viewModel: CardViewModel) {
+
+    val randomCard by viewModel.randomCard.observeAsState()
+    val isCardInDatabase by viewModel.isCardInDatabase.observeAsState()
 
     var selectedTab by remember { mutableIntStateOf(1) }
     var selectedCard by remember { mutableStateOf<CardResponse?>(null) }
     var searchQuery by remember { mutableStateOf("") }
-
-    // Carrega uma carta aleatória ao iniciar o Composable
-    LaunchedEffect(Unit) {
-        viewModel.loadRandomCard() // Carrega a carta aleatória
-    }
-
-    // Observa o card carregado aleatoriamente no ViewModel
-    val randomCard by viewModel.randomCard.observeAsState()
-
-    // Se o card aleatório for carregado, atualiza o card selecionado
-    LaunchedEffect(randomCard) {
-        randomCard?.let {
-            selectedCard = it
-            selectedTab = 1 // Muda para a aba de detalhes da carta
-        }
-    }
-
-    val isCardInDatabase by viewModel.isCardInDatabase.observeAsState()
 
     Scaffold(
         topBar = {
@@ -148,4 +164,4 @@ fun MainScreen(viewModel: CardViewModel) {
         }
     }
 }
-
+*/
