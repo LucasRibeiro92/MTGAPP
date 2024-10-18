@@ -35,6 +35,7 @@ fun MainScreen(viewModel: CardViewModel = getViewModel<CardViewModel>()) {
     val card by viewModel.card.collectAsState()
     val isInDB by viewModel.isInDB.collectAsState()
     val cardList by viewModel.cardList.collectAsState()
+    val erro by viewModel.error.collectAsState()
 
     when (uiState) {
         is CardState.Loading -> {
@@ -52,7 +53,7 @@ fun MainScreen(viewModel: CardViewModel = getViewModel<CardViewModel>()) {
         }
         is CardState.Error -> {
             // Exibe a tela de erro com a mensagem
-            //ErrorScreen(uiState.message)
+            ErrorScreen(erro.toString())
         }
     }
 }

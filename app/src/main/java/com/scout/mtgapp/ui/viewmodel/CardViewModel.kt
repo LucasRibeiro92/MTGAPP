@@ -160,7 +160,9 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
     fun selectTab(tab: Int) {
         val currentState = _uiState.value
         if (currentState is CardState.Success) {
+            _selectedTab.value = tab
             _uiState.value = currentState.copy(selectedTab = tab)
+            _uiState.update { CardState.Success() }
         }
     }
 }

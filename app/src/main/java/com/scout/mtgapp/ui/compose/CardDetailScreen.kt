@@ -15,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
@@ -66,26 +67,7 @@ fun CardDetailScreen(viewModel: CardViewModel) {
         Scaffold(
             containerColor = Color.Transparent,
             bottomBar = {
-                NavigationBar {
-                    NavigationBarItem(
-                        icon = { Icon(Icons.Default.Search, contentDescription = null) },
-                        label = { Text("Search") },
-                        selected = selectedTab == 0,
-                        onClick = { /*selectedTab = 0*/ }
-                    )
-                    NavigationBarItem(
-                        icon = { Icon(Icons.Default.Info, contentDescription = null) },
-                        label = { Text("Details") },
-                        selected = selectedTab == 1,
-                        onClick = { /*selectedTab = 1*/ }
-                    )
-                    NavigationBarItem(
-                        icon = { Icon(Icons.Default.List, contentDescription = null) },
-                        label = { Text("Saved Cards") },
-                        selected = selectedTab == 2,
-                        onClick = { /*selectedTab = 2*/ }
-                    )
-                }
+                selectedTab?.let { MyBottomBar(it) { newTab -> viewModel.selectTab(newTab) } }
             }
         ) { innerPadding ->
             Box(
@@ -93,13 +75,12 @@ fun CardDetailScreen(viewModel: CardViewModel) {
                     .padding(innerPadding)
             ) {
                 Column(
-                    verticalArrangement = Arrangement.Bottom,
+                    //verticalArrangement = Arrangement.Bottom,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(12.dp)
+                        .padding(top=120.dp, start=12.dp, end=12.dp, bottom=12.dp)
                         .verticalScroll(rememberScrollState()),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    Limit
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // Exibindo a imagem da carta com Coil
                     Image(

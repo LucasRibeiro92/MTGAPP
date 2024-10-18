@@ -10,11 +10,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -101,8 +106,19 @@ fun ErrorScreen(message: String) {
         Text(text = message, color = MaterialTheme.colorScheme.error)
     }
 }
+
 @Composable
-fun TopBar() {
+fun MyBackground() {
+    Image(
+        painter = painterResource(id = R.drawable.img_background2),
+        contentDescription = null,
+        modifier = Modifier.fillMaxSize(),
+        contentScale = ContentScale.Crop
+    )
+}
+
+@Composable
+fun MyTopBar() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -137,14 +153,33 @@ fun TopBar() {
 }
 
 @Composable
-fun MyBackground() {
-    Image(
-        painter = painterResource(id = R.drawable.img_background2),
-        contentDescription = null,
-        modifier = Modifier.fillMaxSize(),
-        contentScale = ContentScale.Crop
-    )
+fun MyBottomBar(
+    selectedTab: Int,
+    onTabChange: (Int) -> Unit
+) {
+    NavigationBar {
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.Home, contentDescription = null) },
+            label = { Text("Home") },
+            selected = selectedTab == 0,
+            onClick = { onTabChange(0) }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.Search, contentDescription = null) },
+            label = { Text("Search") },
+            selected = selectedTab == 1,
+            onClick = { onTabChange(1) }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.List, contentDescription = null) },
+            label = { Text("Saved Cards") },
+            selected = selectedTab == 2,
+            onClick = { onTabChange(2) }
+        )
+    }
 }
+
+
 
 /*
 @Composable
