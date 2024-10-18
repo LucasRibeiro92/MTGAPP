@@ -10,6 +10,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -17,37 +18,41 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.scout.mtgapp.data.local.entity.card.Card
 import com.scout.mtgapp.data.remote.entity.CardResponse
+import com.scout.mtgapp.ui.viewmodel.CardViewModel
 
 @Composable
-fun CardListScreen(savedCards: LiveData<List<Card>>, onCardClick: (String) -> Unit) {
+fun CardListScreen(viewModel: CardViewModel) {
 
-    val savCards by savedCards.observeAsState(initial = emptyList()) // Observa o LiveData e atualiza a UI
+    val uiState by viewModel.uiState.collectAsState()
+    val selectedTab by viewModel.selectedTab.collectAsState()
+    val cardList by viewModel.cardList.collectAsState()
 
     LazyColumn {
-        items(savCards) { card ->
-            CardItem(card = card, onCardClick = onCardClick)
+        items(cardList) { card ->
+            CardItem(card = card)
         }
     }
 }
 
 @Composable
-fun CardItem(card: Card, onCardClick: (String) -> Unit) {
+fun CardItem(card: CardResponse) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .shadow(4.dp, RoundedCornerShape(8.dp))
-            .clickable { onCardClick(card.id) }, // Adiciona o evento de clique,
+            .clickable {}, // Adiciona o evento de clique,
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             // Exibindo imagem da carta
             AsyncImage(
-                model = card.imageUri, // Certifique-se de que 'imageUrl' está correto no CardResponse
+                model = card.imageUris?.normal, // Certifique-se de que 'imageUrl' está correto no CardResponse
                 contentDescription = card.name,
                 modifier = Modifier
                     .fillMaxWidth()
