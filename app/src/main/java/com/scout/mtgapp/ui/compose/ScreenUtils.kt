@@ -1,10 +1,13 @@
 package com.scout.mtgapp.ui.compose
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -20,8 +23,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.scout.mtgapp.R
 import com.scout.mtgapp.ui.theme.BrightRed
+import com.scout.mtgapp.ui.theme.MyBlue
+import com.scout.mtgapp.ui.theme.MyPurple
 
 
 @Composable
@@ -64,8 +75,8 @@ fun GradientBox(
             .fillMaxSize()
             .background(brush = Brush.linearGradient(
             listOf(
-                BrightRed,
-                Color.Black
+                MyPurple,
+                MyBlue
             )
         ))
     )
@@ -90,14 +101,52 @@ fun ErrorScreen(message: String) {
         Text(text = message, color = MaterialTheme.colorScheme.error)
     }
 }
-
-/*
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar() {
-    TopAppBar(title = { Text("MTG App") })
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp) // Espaçamento para separar o título da SearchBar
+    ) {
+        // Título no centro com 25sp
+        Text(
+            text = "Magic App",
+            fontSize = 35.sp,
+            fontFamily = FontFamily.Cursive,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp, bottom = 8.dp)
+                .wrapContentSize(Alignment.Center) // Centraliza o título
+        )
+
+        // Barra de pesquisa logo abaixo do título
+        var searchQuery = ""
+        /*
+        SearchBar(
+            query = searchQuery,
+            onQueryChanged = { newQuery -> searchQuery = newQuery },
+            onSearch = {
+                viewModel.searchCards(searchQuery) // Chama a função de busca no ViewModel
+                //selectedTab = 0
+            }
+        )
+        */
+    }
 }
 
+@Composable
+fun MyBackground() {
+    Image(
+        painter = painterResource(id = R.drawable.img_background2),
+        contentDescription = null,
+        modifier = Modifier.fillMaxSize(),
+        contentScale = ContentScale.Crop
+    )
+}
+
+/*
 @Composable
 fun SearchViewComponent(onSearchSubmit: (String) -> Unit) {
     var query by remember { mutableStateOf("") }

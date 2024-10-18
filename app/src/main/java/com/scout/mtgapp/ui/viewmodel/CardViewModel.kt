@@ -117,7 +117,8 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
         viewModelScope.launch {
             cardRepository.saveCard(cardResponse.toCard())
             checkCardInDatabase(cardResponse.id)
-            _uiState.emit(CardState.Success())
+            _uiState.update { CardState.Success() }
+            //_uiState.emit(CardState.Success())
         }
     }
 
@@ -126,7 +127,8 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
         viewModelScope.launch {
             cardRepository.deleteCard(cardResponse.toCard())
             checkCardInDatabase(cardResponse.id)
-            _uiState.emit(CardState.Success())
+            _uiState.update { CardState.Success() }
+            //_uiState.emit(CardState.Success())
         }
     }
 

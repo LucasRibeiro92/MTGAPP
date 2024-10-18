@@ -12,6 +12,9 @@ val PureWhite = Color(0xFFFFFFFF)
 val LightGray = Color(0xFFE1E1E1)
 val DarkGray = Color(0xFF1C1C1C)
 
+val MyPurple = Color(0xff8c51a5)
+val MyBlue = Color(0xff2c2d61)
+
 private val DarkColorScheme = darkColorScheme(
     primary = BrightRed,
     secondary = DeepRed,
