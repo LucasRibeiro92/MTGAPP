@@ -30,22 +30,69 @@ fun CardListScreen(viewModel: CardViewModel) {
     val uiState by viewModel.uiState.collectAsState()
     val selectedTab by viewModel.selectedTab.collectAsState()
     val cardList by viewModel.cardList.collectAsState()
+    //ListRequester serve para que eu saiba de onde está vindo a solicitação de exibir uma lista
+    val listRequester by viewModel.listRequester.collectAsState()
+    val query by viewModel.query.collectAsState()
 
-    LazyColumn {
-        items(cardList) { card ->
-            CardItem(card = card)
+    ScreenBase(
+        selectedTab = selectedTab ?: 0,
+        onTabChange = { newTab -> viewModel.selectTab(newTab) }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        ) {
+            when (listRequester) {
+                0 ->
+                    if (query.isNotEmpty()){
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            // Usa a SearchBar passando a query e as funções de mudança e busca
+                            SearchBar(
+                                query = query,
+                                onQueryChanged = { viewModel.onQueryChanged(it) },
+                                onSearch = { viewModel.searchCards() } // Chama a função de busca na API
+                            )
+
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxWidth() // Garante que a lista ocupe toda a largura
+                                    .weight(1f) // Ocupa o espaço restante abaixo da SearchBar
+                            ) {
+                                items(cardList) { card ->
+                                    CardItem(card = card, onClick = { viewModel.showCardDetail(card) })
+                                }
+                            }
+                        }
+                    } else {
+                        SearchBar(
+                            query = query,
+                            onQueryChanged = { viewModel.onQueryChanged(it) },
+                            onSearch = { viewModel.searchCards() } // Chama a função de busca na API
+                        )
+                    }
+                1 ->
+                    LazyColumn {
+                        items(cardList) { card ->
+                            CardItem(card = card, onClick = { viewModel.showCardDetail(card) })
+                        }
+                    }
+            }
         }
     }
 }
 
 @Composable
-fun CardItem(card: CardResponse) {
+fun CardItem(card: CardResponse, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .shadow(4.dp, RoundedCornerShape(8.dp))
-            .clickable {}, // Adiciona o evento de clique,
+            .clickable { onClick() }, // Adiciona o evento de clique,
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {

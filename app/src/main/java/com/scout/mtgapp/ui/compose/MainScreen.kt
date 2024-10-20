@@ -32,9 +32,6 @@ fun MainScreen(viewModel: CardViewModel = getViewModel<CardViewModel>()) {
 
     val uiState by viewModel.uiState.collectAsState()
     val selectedTab by viewModel.selectedTab.collectAsState()
-    val card by viewModel.card.collectAsState()
-    val isInDB by viewModel.isInDB.collectAsState()
-    val cardList by viewModel.cardList.collectAsState()
     val erro by viewModel.error.collectAsState()
 
     when (uiState) {

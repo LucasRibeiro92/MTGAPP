@@ -2,6 +2,7 @@ package com.scout.mtgapp.ui.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -58,69 +60,68 @@ fun CardDetailScreen(viewModel: CardViewModel) {
     val card by viewModel.card.collectAsState()
     val isInDB by viewModel.isInDB.collectAsState()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        MyBackground()
-
-        Scaffold(
-            containerColor = Color.Transparent,
-            bottomBar = {
-                selectedTab?.let { MyBottomBar(it) { newTab -> viewModel.selectTab(newTab) } }
-            }
-        ) { innerPadding ->
-            Box(
+    ScreenBase(
+        selectedTab = selectedTab ?: 0,
+        onTabChange = { newTab -> viewModel.selectTab(newTab) }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+        ) {
+            Column(
+                //verticalArrangement = Arrangement.Bottom,
                 modifier = Modifier
-                    .padding(innerPadding)
-            ) {
-                Column(
-                    //verticalArrangement = Arrangement.Bottom,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top=120.dp, start=12.dp, end=12.dp, bottom=12.dp)
-                        .verticalScroll(rememberScrollState()),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // Exibindo a imagem da carta com Coil
-                    Image(
-                        painter = rememberAsyncImagePainter(card?.imageUris?.small ?: ""),
-                        contentDescription = card?.name,
-                        contentScale = ContentScale.FillHeight,
-                        modifier = Modifier
-                            .height(400.dp)
+                    .fillMaxSize()
+                    .padding(
+                        top = 30.dp,
+                        start = 20.dp,
+                        end = 20.dp,
+                        bottom = 8.dp
                     )
+                    .verticalScroll(
+                        rememberScrollState()
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Exibindo a imagem da carta com Coil
+                Image(
+                    painter = rememberAsyncImagePainter(card?.imageUris?.small ?: ""),
+                    contentDescription = card?.name,
+                    contentScale = ContentScale.FillHeight,
+                    modifier = Modifier
+                        .height(400.dp)
+                        .shadow(5.dp)
+                )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                    card?.let { Text(text = it.name, style = MaterialTheme.typography.titleLarge) }
-                    card?.let {
-                        Text(
-                            text = it.typeLine,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                card?.let { Text(text = it.name, style = MaterialTheme.typography.titleLarge) }
+                card?.let {
+                    Text(
+                        text = it.typeLine,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                card?.let {
+                    Text(
+                        text = it.oracleText,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                if (isInDB) {
+                    Button(
+                        onClick = { card?.let { viewModel.deleteCard(it) } }
+                    ) {
+                        Text(text = "Remover")
                     }
-                    card?.let {
-                        Text(
-                            text = it.oracleText,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    if (isInDB) {
-                        Button(
-                            onClick = { card?.let { viewModel.deleteCard(it) } }
-                        ) {
-                            Text(text = "Remover")
-                        }
-                    } else {
-                        Button(
-                            onClick = { card?.let { viewModel.saveCard(it) } }
-                        ) {
-                            Text(text = "Adicionar")
-                        }
+                } else {
+                    Button(
+                        onClick = { card?.let { viewModel.saveCard(it) } }
+                    ) {
+                        Text(text = "Adicionar")
                     }
                 }
             }

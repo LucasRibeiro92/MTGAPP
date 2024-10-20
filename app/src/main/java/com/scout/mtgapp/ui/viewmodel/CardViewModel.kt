@@ -42,12 +42,19 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
     val card = _card.asStateFlow()
 
     // StateFlow to indicate if a card is in DB
-    private val _isInDB = MutableStateFlow<Boolean>(false)
+    private val _isInDB = MutableStateFlow(false)
     val isInDB = _isInDB.asStateFlow()
 
     // StateFlow to store a list of cards
     private val _cardList = MutableStateFlow<List<CardResponse>>(emptyList())
     val cardList = _cardList.asStateFlow()
+
+    // Estado da query de busca
+    private val _query = MutableStateFlow("")
+    val query = _query.asStateFlow()
+
+    private val _listRequester = MutableStateFlow(0) // 0 = Search, 1 = Saved
+    val listRequester = _listRequester.asStateFlow()
 
     // StateFlow to store errors during the process
     private val _error = MutableStateFlow<String?>(null)
@@ -74,10 +81,11 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
     }
 
     // Function to search cards on Scryfall API resulting in a list of cards
-    fun searchCards(query: String) {
+    fun searchCards() {
         viewModelScope.launch {
             try {
-                _cardList.value = cardRepository.searchCards(query)
+                _cardList.value = cardRepository.searchCards(_query.value)
+                _uiState.update { CardState.Success() }
             } catch (e: Exception) {
                 _error.value = e.message
                 _uiState.update { CardState.Error(e.message.toString()) }
@@ -86,16 +94,16 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
     }
 
     // Function to get a card from Scryfall API.
-    fun getCard(id: String) {
-        viewModelScope.launch {
-            try {
-                Log.d("CardViewModel", "Fetching card with id: $id")
-                _card.value = cardRepository.getCard(id)
-            } catch (e: Exception) {
-                Log.e("CardViewModel", "Error fetching card", e)
-                _error.value = e.message
-                _uiState.update { CardState.Error(e.message.toString()) }
-            }
+    fun showCardDetail(card: CardResponse) {
+        try {
+            Log.d("CardViewModel", "Fetching card with id")
+            _card.value = card
+            _selectedTab.value = 0
+            _uiState.update { CardState.Success() }
+        } catch (e: Exception) {
+            Log.e("CardViewModel", "Error fetching card", e)
+            _error.value = e.message
+            _uiState.update { CardState.Error(e.message.toString()) }
         }
     }
 
@@ -165,4 +173,15 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
             _uiState.update { CardState.Success() }
         }
     }
+
+    // Função para atualizar a query
+    fun onQueryChanged(newQuery: String) {
+        _query.value = newQuery
+    }
+
+    fun onListRequesterChanged(newListRequester: Int) {
+        _listRequester.value = newListRequester
+    }
+
+
 }
