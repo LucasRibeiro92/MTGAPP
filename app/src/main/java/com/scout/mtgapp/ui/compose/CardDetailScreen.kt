@@ -47,9 +47,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.scout.mtgapp.R
 import com.scout.mtgapp.data.remote.entity.CardResponse
-import com.scout.mtgapp.ui.theme.BrightRed
-import com.scout.mtgapp.ui.theme.MyBlue
-import com.scout.mtgapp.ui.theme.MyPurple
 import com.scout.mtgapp.ui.viewmodel.CardViewModel
 
 @Composable

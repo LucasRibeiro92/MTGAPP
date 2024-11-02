@@ -71,8 +71,10 @@ class CardRepository(private val cardDao: CardDao) {
     }
 
     // Função para buscar todas as cartas salvas
-    fun getAllSavedCards(): List<Card> {
-        return cardDao.getAllCards()
+    suspend fun getAllSavedCards(): List<Card> {
+        return withContext(Dispatchers.IO) {
+            cardDao.getAllCards()
+        }
     }
 
     // Função para buscar uma carta pelo ID

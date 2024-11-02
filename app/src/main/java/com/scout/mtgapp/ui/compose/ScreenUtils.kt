@@ -2,20 +2,24 @@ package com.scout.mtgapp.ui.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,14 +37,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.scout.mtgapp.R
-import com.scout.mtgapp.ui.theme.BrightRed
-import com.scout.mtgapp.ui.theme.MyBlue
-import com.scout.mtgapp.ui.theme.MyPurple
+import com.scout.mtgapp.ui.theme.DarkSurface
 
 @Composable
 fun ScreenBase(
@@ -48,10 +49,8 @@ fun ScreenBase(
     onTabChange: (Int) -> Unit,
     content: @Composable (PaddingValues) -> Unit
 ){
-    MyBackground()
-
     Scaffold(
-        containerColor = Color.Transparent,
+        //containerColor = Color.Transparent,
         topBar = {
             MyTopBar()
         },//
@@ -95,19 +94,90 @@ fun SearchBar(
 }
 
 @Composable
-fun GradientBox(
-    modifier: Modifier
-) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(brush = Brush.linearGradient(
-            listOf(
-                MyPurple,
-                MyBlue
-            )
-        ))
+fun MyBackground() {
+    Image(
+        painter = painterResource(id = R.drawable.back_img),
+        contentDescription = null,
+        modifier = Modifier.fillMaxSize(),
+        contentScale = ContentScale.Crop
     )
+}
+
+@Composable
+fun MyTopBar() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(120.dp)
+            .clip(RoundedCornerShape(bottomStart = 35.dp, bottomEnd = 35.dp))
+            .background(DarkSurface)
+            .padding(bottom = 8.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Ícone à esquerda
+            Icon(
+                imageVector = Icons.Default.Menu,
+                contentDescription = "Menu",
+                tint = Color.White,
+                modifier = Modifier.size(24.dp)
+            )
+
+            // Título no centro
+            Text(
+                text = "TESTE",
+                fontSize = 35.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                modifier = Modifier
+                    .weight(1f)
+                    .wrapContentSize(Alignment.Center)
+            )
+
+            // Ícone à direita
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = "Settings",
+                tint = Color.White,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun MyBottomBar(
+    selectedTab: Int,
+    onTabChange: (Int) -> Unit
+) {
+    NavigationBar(
+        containerColor = DarkSurface, // Define a cor de fundo da barra de navegação
+        modifier = Modifier
+            .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)) // Clip antes do background
+    ) {
+        NavigationBarItem(
+            icon = { Icon(
+                Icons.Default.Search,
+                contentDescription = null,
+                tint = Color.White
+            ) },
+            label = { Text("Search") },
+            selected = selectedTab == 1,
+            onClick = { onTabChange(1) }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Default.List, contentDescription = null, tint = Color.White) },
+            label = { Text("Saved Cards") },
+            selected = selectedTab == 2,
+            onClick = { onTabChange(2) }
+        )
+    }
 }
 
 @Composable
@@ -129,110 +199,23 @@ fun ErrorScreen(message: String) {
         Text(text = message, color = MaterialTheme.colorScheme.error)
     }
 }
-
-@Composable
-fun MyBackground() {
-    Image(
-        painter = painterResource(id = R.drawable.background),
-        contentDescription = null,
-        modifier = Modifier.fillMaxSize(),
-        contentScale = ContentScale.Crop
-    )
-}
-
-@Composable
-fun MyTopBar() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(103.dp)
-            .padding(bottom = 8.dp) // Espaçamento para separar o título da SearchBar
-    ) {
-        // Título no centro com 25sp
-        Text(
-            text = "TESTE",
-            fontSize = 35.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp, bottom = 8.dp)
-                .wrapContentSize(Alignment.Center) // Centraliza o título
-        )
-
-        // Barra de pesquisa logo abaixo do título
-        var searchQuery = ""
-        /*
-        SearchBar(
-            query = searchQuery,
-            onQueryChanged = { newQuery -> searchQuery = newQuery },
-            onSearch = {
-                viewModel.searchCards(searchQuery) // Chama a função de busca no ViewModel
-                //selectedTab = 0
-            }
-        )
-        */
-    }
-}
-
-@Composable
-fun MyBottomBar(
-    selectedTab: Int,
-    onTabChange: (Int) -> Unit
-) {
-    NavigationBar {
-        NavigationBarItem(
-            icon = { Icon(Icons.Default.Search, contentDescription = null) },
-            label = { Text("Search") },
-            selected = selectedTab == 1,
-            onClick = { onTabChange(1) }
-        )
-        NavigationBarItem(
-            icon = { Icon(Icons.Default.List, contentDescription = null) },
-            label = { Text("Saved Cards") },
-            selected = selectedTab == 1,
-            onClick = { onTabChange(1) }
-        )
-    }
-}
-
-
-
 /*
 @Composable
-fun SearchViewComponent(onSearchSubmit: (String) -> Unit) {
-    var query by remember { mutableStateOf("") }
-
-    TextField(
-        value = query,
-        onValueChange = { query = it },
-        placeholder = { Text("Search cards...") },
-        modifier = Modifier.fillMaxWidth(),
-        trailingIcon = {
-            IconButton(onClick = { onSearchSubmit(query) }) {
-                Icon(Icons.Default.Search, contentDescription = "Search Icon")
-            }
-        }
+fun GradientBox(
+    modifier: Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(brush = Brush.linearGradient(
+                listOf(
+                    MyPurple,
+                    MyBlue
+                )
+            ))
     )
 }
-
-@Composable
-fun BottomBarComponent() {
-    BottomAppBar {
-        // Itens da bottom bar
-        IconButton(onClick = { /* ação da bottom bar */ }) {
-            Icon(Icons.Default.Home, contentDescription = "Home")
-        }
-        IconButton(onClick = { /* ação da bottom bar */ }) {
-            Icon(Icons.Default.List, contentDescription = "Card List")
-        }
-        IconButton(onClick = { /* ação da bottom bar */ }) {
-            Icon(Icons.Default.Favorite, contentDescription = "Favorites")
-        }
-    }
-}
 */
-
 /*
 @Composable
 fun MainComponent(viewModel: CardViewModel) {

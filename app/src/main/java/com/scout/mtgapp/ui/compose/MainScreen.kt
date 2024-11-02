@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.scout.mtgapp.data.remote.entity.CardResponse
-import com.scout.mtgapp.ui.theme.BrightRed
 import com.scout.mtgapp.ui.viewmodel.CardState
 import com.scout.mtgapp.ui.viewmodel.CardViewModel
 import org.koin.androidx.compose.getViewModel
@@ -45,6 +44,9 @@ fun MainScreen(viewModel: CardViewModel = getViewModel<CardViewModel>()) {
                 }
                 1 -> {
                     CardListScreen(viewModel)
+                }
+                2 -> {
+                    SavedCardListScreen(viewModel)
                 }
             }
         }

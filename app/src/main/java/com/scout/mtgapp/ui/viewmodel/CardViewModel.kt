@@ -8,29 +8,51 @@ import androidx.lifecycle.viewModelScope
 import com.scout.mtgapp.data.local.entity.card.Card
 import com.scout.mtgapp.data.remote.entity.CardResponse
 import com.scout.mtgapp.data.repository.CardRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.annotations.NotNull
 
-sealed class CardState {
-    data object Loading : CardState()
-    data class Success(
+sealed class CardState<out T> {
+    data object Loading : CardState<Nothing>()
+    data class Success<out T>(
         val selectedTab: Int? = 0,
         val card: CardResponse? = null, // Detalhe da carta (opcional)
         val isInDB: Boolean? = null,
         val cardList: List<CardResponse>? = null, // Lista de cartas (opcional)
-    ) : CardState()
-    data class Error(val message: String) : CardState()
+    ) : CardState<T>()
+    data class Error(val message: String) : CardState<Nothing>()
 }
 
-class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
+class CardViewModel(
+    private val cardRepository: CardRepository
+) : ViewModel() {
+
+    /*
+    private val _countriesState = MutableStateFlow<DataState<List<Country>>>(DataState.Loading)
+    val countriesState = _countriesState.asStateFlow()
+
+    private fun getCountries() {
+        viewModelScope.launch {
+            try {
+                _countriesState.value = DataState.Loading
+                footballRepository.fetchAndSaveCountries()
+                val countries = footballRepository.getCountriesFromLocal()
+                _countriesState.value = DataState.Success(countries)
+            } catch (e: Exception) {
+                _countriesState.value = DataState.Error("Erro ao carregar países: ${e.message}")
+            }
+        }
+    }
+    */
 
     // Controla o estado geral da UI (incluindo diferentes telas)
-    private val _uiState = MutableStateFlow<CardState>(CardState.Loading)
+    private val _uiState = MutableStateFlow<CardState<Nothing>>(CardState.Loading)
     val uiState = _uiState.asStateFlow()
 
     // StateFlow to store tab
@@ -49,12 +71,13 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
     private val _cardList = MutableStateFlow<List<CardResponse>>(emptyList())
     val cardList = _cardList.asStateFlow()
 
+    // StateFlow to store a list of saved cards
+    private val _savedCardList = MutableStateFlow<List<Card>>(emptyList())
+    val savedCardList = _savedCardList.asStateFlow()
+
     // Estado da query de busca
     private val _query = MutableStateFlow("")
     val query = _query.asStateFlow()
-
-    private val _listRequester = MutableStateFlow(0) // 0 = Search, 1 = Saved
-    val listRequester = _listRequester.asStateFlow()
 
     // StateFlow to store errors during the process
     private val _error = MutableStateFlow<String?>(null)
@@ -125,6 +148,7 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
         viewModelScope.launch {
             cardRepository.saveCard(cardResponse.toCard())
             checkCardInDatabase(cardResponse.id)
+            getSavedCards()
             _uiState.update { CardState.Success() }
             //_uiState.emit(CardState.Success())
         }
@@ -135,6 +159,7 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
         viewModelScope.launch {
             cardRepository.deleteCard(cardResponse.toCard())
             checkCardInDatabase(cardResponse.id)
+            getSavedCards()
             _uiState.update { CardState.Success() }
             //_uiState.emit(CardState.Success())
         }
@@ -143,8 +168,7 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
     //Function to load saved cards from local DB
     private fun getSavedCards() {
         viewModelScope.launch {
-            // Load saved cards from local DB on initialization
-            //_cardList.value = cardRepository.getAllSavedCards()
+            _savedCardList.value = cardRepository.getAllSavedCards()
         }
     }
 
@@ -168,6 +192,9 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
     fun selectTab(tab: Int) {
         val currentState = _uiState.value
         if (currentState is CardState.Success) {
+            if(tab==2){
+                getSavedCards()
+            }
             _selectedTab.value = tab
             _uiState.value = currentState.copy(selectedTab = tab)
             _uiState.update { CardState.Success() }
@@ -178,10 +205,4 @@ class CardViewModel(private val cardRepository: CardRepository) : ViewModel() {
     fun onQueryChanged(newQuery: String) {
         _query.value = newQuery
     }
-
-    fun onListRequesterChanged(newListRequester: Int) {
-        _listRequester.value = newListRequester
-    }
-
-
 }
